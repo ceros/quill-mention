@@ -10,10 +10,10 @@ function attachDataValues(element, data, dataAttributes) {
   return mention;
 }
 
-function getMentionCharIndex(text, mentionDenotationChars) {
+function getMentionCharIndex(text, mentionDenotationChars, mentionCharIndexParser) {
   return mentionDenotationChars.reduce(
     (prev, mentionChar) => {
-      const mentionCharIndex = text.lastIndexOf(mentionChar);
+      const mentionCharIndex = mentionCharIndexParser(text, mentionDenotationChars);
 
       if (mentionCharIndex > prev.mentionCharIndex) {
         return {
