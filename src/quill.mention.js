@@ -60,7 +60,10 @@ class Mention {
       listItemClass: "ql-mention-list-item",
       mentionContainerClass: "ql-mention-list-container",
       mentionListClass: "ql-mention-list",
-      spaceAfterInsert: true
+      spaceAfterInsert: true,
+      mentionCharIndexParser: function(text, mentionChar) {
+        return text.lastIndexOf(mentionChar);
+      }
     };
 
     Object.assign(this.options, options, {
@@ -644,7 +647,8 @@ class Mention {
     const textBeforeCursor = this.getTextBeforeCursor();
     const { mentionChar, mentionCharIndex } = getMentionCharIndex(
       textBeforeCursor,
-      this.options.mentionDenotationChars
+      this.options.mentionDenotationChars,
+      this.options.mentionCharIndexParser
     );
 
     if (
