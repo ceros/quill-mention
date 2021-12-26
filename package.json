@@ -1,16 +1,11 @@
 {
   "name": "quill-mention",
-  "version": "3.0.9",
+  "version": "3.1.0",
   "description": "@mentions for the Quill rich text editor",
+  "homepage": "https://quill-mention.com/",
   "main": "dist/quill.mention.csj.js",
   "module": "dist/quill.mention.esm.js",
-  "publishConfig": {
-    "registry":"https://npm.pkg.github.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ceros/quill-mention.git"
-  },
+  "repository": "https://github.com/quill-mention/quill-mention.git",
   "author": "Fredrik Sundqvist <fsundqvist@gmail.com>",
   "license": "MIT",
   "files": [
