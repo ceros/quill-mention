@@ -1,5 +1,10 @@
 ![Quill Mention](docs/static/quill-mention.png "Quill Mention")
 
+# Fork status
+
+This package is a fork of the [quill-mention](https://www.npmjs.com/package/quill-mention) npm package. The original source 
+code is available on GitHub at [afry/quill-mention](https://github.com/afry/quill-mention).
+
 # Quill Mention
 
 [![npm version](https://badge.fury.io/js/quill-mention.svg)](https://badge.fury.io/js/quill-mention)
