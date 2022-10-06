@@ -53,6 +53,9 @@ class Mention {
       onOpen() {
         return true;
       },
+      onBeforeClose() {
+        return true;
+      },
       onClose() {
         return true;
       },
@@ -63,7 +66,8 @@ class Mention {
       spaceAfterInsert: true,
       mentionCharIndexParser: function(text, mentionChar) {
         return text.lastIndexOf(mentionChar);
-      }
+      },
+      selectKeys: [Keys.ENTER]
     };
 
     Object.assign(this.options, options, {
@@ -85,6 +89,8 @@ class Mention {
     }
 
     this.mentionList = document.createElement("ul");
+    this.mentionList.id = 'quill-mention-list';
+    quill.root.setAttribute('aria-owns', 'quill-mention-list');
     this.mentionList.className = this.options.mentionListClass
       ? this.options.mentionListClass
       : "";
@@ -92,6 +98,15 @@ class Mention {
 
     quill.on("text-change", this.onTextChange.bind(this));
     quill.on("selection-change", this.onSelectionChange.bind(this));
+
+    //Pasting doesn't fire selection-change after the pasted text is
+    //inserted, so here we manually trigger one
+    quill.container.addEventListener("paste", () => {
+      setTimeout(() => {
+        const range = quill.getSelection();
+        this.onSelectionChange(range);
+      });
+    });
 
     quill.keyboard.addBinding(
       {
@@ -103,12 +118,14 @@ class Mention {
       quill.keyboard.bindings[Keys.TAB].pop()
     );
 
-    quill.keyboard.addBinding(
-      {
-        key: Keys.ENTER
-      },
-      this.selectHandler.bind(this)
-    );
+    for (let selectKey of this.options.selectKeys) {
+      quill.keyboard.addBinding(
+        {
+          key: selectKey
+        },
+        this.selectHandler.bind(this)
+      );
+    }
     quill.keyboard.bindings[Keys.ENTER].unshift(
       quill.keyboard.bindings[Keys.ENTER].pop()
     );
@@ -185,9 +202,11 @@ class Mention {
   }
 
   hideMentionList() {
+    this.options.onBeforeClose();
     this.mentionContainer.style.display = "none";
     this.mentionContainer.remove();
     this.setIsOpen(false);
+    this.quill.root.removeAttribute('aria-activedescendant');
   }
 
   highlightItem(scrollItemInView = true) {
@@ -200,6 +219,7 @@ class Mention {
     }
 
     this.mentionList.childNodes[this.itemIndex].classList.add("selected");
+    this.quill.root.setAttribute('aria-activedescendant', this.mentionList.childNodes[this.itemIndex].id);
 
     if (scrollItemInView) {
       const itemHeight = this.mentionList.childNodes[this.itemIndex]
@@ -360,11 +380,13 @@ class Mention {
 
       for (let i = 0; i < data.length; i += 1) {
         const li = document.createElement("li");
+        li.id = 'quill-mention-item-' + i;
         li.className = this.options.listItemClass
           ? this.options.listItemClass
           : "";
         if (data[i].disabled) {
           li.className += " disabled";
+          li.setAttribute('aria-hidden','true');
         } else if (initialSelection === -1) {
           initialSelection = i;
         }
@@ -687,9 +709,15 @@ class Mention {
           mentionChar
         );
       } else {
+        if (this.existingSourceExecutionToken) {
+          this.existingSourceExecutionToken.abandoned = true;
+        }
         this.hideMentionList();
       }
     } else {
+      if (this.existingSourceExecutionToken) {
+        this.existingSourceExecutionToken.abandoned = true;
+      }
       this.hideMentionList();
     }
   }

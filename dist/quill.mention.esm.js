@@ -22,6 +22,21 @@ function _createClass(Constructor, protoProps, staticProps) {
   return Constructor;
 }
 
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
 function _extends() {
   _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -77,7 +92,7 @@ function _isNativeReflectConstruct() {
   if (typeof Proxy === "function") return true;
 
   try {
-    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {}));
     return true;
   } catch (e) {
     return false;
@@ -95,6 +110,8 @@ function _assertThisInitialized(self) {
 function _possibleConstructorReturn(self, call) {
   if (call && (typeof call === "object" || typeof call === "function")) {
     return call;
+  } else if (call !== void 0) {
+    throw new TypeError("Derived constructors may only return object or undefined");
   }
 
   return _assertThisInitialized(self);
@@ -128,7 +145,7 @@ function _superPropBase(object, property) {
   return object;
 }
 
-function _get(target, property, receiver) {
+function _get() {
   if (typeof Reflect !== "undefined" && Reflect.get) {
     _get = Reflect.get;
   } else {
@@ -139,14 +156,88 @@ function _get(target, property, receiver) {
       var desc = Object.getOwnPropertyDescriptor(base, property);
 
       if (desc.get) {
-        return desc.get.call(receiver);
+        return desc.get.call(arguments.length < 3 ? target : receiver);
       }
 
       return desc.value;
     };
   }
 
-  return _get(target, property, receiver || target);
+  return _get.apply(this, arguments);
+}
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+}
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+  return arr2;
+}
+
+function _createForOfIteratorHelper(o, allowArrayLike) {
+  var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+
+  if (!it) {
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+
+      var F = function () {};
+
+      return {
+        s: F,
+        n: function () {
+          if (i >= o.length) return {
+            done: true
+          };
+          return {
+            done: false,
+            value: o[i++]
+          };
+        },
+        e: function (e) {
+          throw e;
+        },
+        f: F
+      };
+    }
+
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+
+  var normalCompletion = true,
+      didErr = false,
+      err;
+  return {
+    s: function () {
+      it = it.call(o);
+    },
+    n: function () {
+      var step = it.next();
+      normalCompletion = step.done;
+      return step;
+    },
+    e: function (e) {
+      didErr = true;
+      err = e;
+    },
+    f: function () {
+      try {
+        if (!normalCompletion && it.return != null) it.return();
+      } finally {
+        if (didErr) throw err;
+      }
+    }
+  };
 }
 
 var Keys = {
@@ -213,13 +304,84 @@ var MentionBlot = /*#__PURE__*/function (_Embed) {
 
   var _super = _createSuper(MentionBlot);
 
-  function MentionBlot() {
+  function MentionBlot(scroll, node) {
+    var _this;
+
     _classCallCheck(this, MentionBlot);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, scroll, node);
+
+    _defineProperty(_assertThisInitialized(_this), "hoverHandler", void 0);
+
+    _defineProperty(_assertThisInitialized(_this), "hoverHandler", void 0);
+
+    _this.clickHandler = null;
+    _this.hoverHandler = null;
+    _this.mounted = false;
+    return _this;
   }
 
-  _createClass(MentionBlot, null, [{
+  _createClass(MentionBlot, [{
+    key: "attach",
+    value: function attach() {
+      _get(_getPrototypeOf(MentionBlot.prototype), "attach", this).call(this);
+
+      if (!this.mounted) {
+        this.mounted = true;
+        this.clickHandler = this.getClickHandler();
+        this.hoverHandler = this.getHoverHandler();
+        this.domNode.addEventListener("click", this.clickHandler, false);
+        this.domNode.addEventListener("mouseenter", this.hoverHandler, false);
+      }
+    }
+  }, {
+    key: "detach",
+    value: function detach() {
+      _get(_getPrototypeOf(MentionBlot.prototype), "detach", this).call(this);
+
+      this.mounted = false;
+
+      if (this.clickHandler) {
+        this.domNode.removeEventListener("click", this.clickHandler);
+        this.clickHandler = null;
+      }
+    }
+  }, {
+    key: "getClickHandler",
+    value: function getClickHandler() {
+      var _this2 = this;
+
+      return function (e) {
+        var event = _this2.buildEvent("mention-clicked", e);
+
+        window.dispatchEvent(event);
+        e.preventDefault();
+      };
+    }
+  }, {
+    key: "getHoverHandler",
+    value: function getHoverHandler() {
+      var _this3 = this;
+
+      return function (e) {
+        var event = _this3.buildEvent('mention-hovered', e);
+
+        window.dispatchEvent(event);
+        e.preventDefault();
+      };
+    }
+  }, {
+    key: "buildEvent",
+    value: function buildEvent(name, e) {
+      var event = new Event(name, {
+        bubbles: true,
+        cancelable: true
+      });
+      event.value = _extends({}, this.domNode.dataset);
+      event.event = e;
+      return event;
+    }
+  }], [{
     key: "create",
     value: function create(data) {
       var node = _get(_getPrototypeOf(MentionBlot), "create", this).call(this);
@@ -257,6 +419,8 @@ Quill.register(MentionBlot);
 
 var Mention = /*#__PURE__*/function () {
   function Mention(quill, options) {
+    var _this = this;
+
     _classCallCheck(this, Mention);
 
     this.isOpen = false;
@@ -299,6 +463,9 @@ var Mention = /*#__PURE__*/function () {
       onOpen: function onOpen() {
         return true;
       },
+      onBeforeClose: function onBeforeClose() {
+        return true;
+      },
       onClose: function onClose() {
         return true;
       },
@@ -309,7 +476,8 @@ var Mention = /*#__PURE__*/function () {
       spaceAfterInsert: true,
       mentionCharIndexParser: function mentionCharIndexParser(text, mentionChar) {
         return text.lastIndexOf(mentionChar);
-      }
+      },
+      selectKeys: [Keys.ENTER]
     };
 
     _extends(this.options, options, {
@@ -327,17 +495,42 @@ var Mention = /*#__PURE__*/function () {
     }
 
     this.mentionList = document.createElement("ul");
+    this.mentionList.id = 'quill-mention-list';
+    quill.root.setAttribute('aria-owns', 'quill-mention-list');
     this.mentionList.className = this.options.mentionListClass ? this.options.mentionListClass : "";
     this.mentionContainer.appendChild(this.mentionList);
     quill.on("text-change", this.onTextChange.bind(this));
-    quill.on("selection-change", this.onSelectionChange.bind(this));
+    quill.on("selection-change", this.onSelectionChange.bind(this)); //Pasting doesn't fire selection-change after the pasted text is
+    //inserted, so here we manually trigger one
+
+    quill.container.addEventListener("paste", function () {
+      setTimeout(function () {
+        var range = quill.getSelection();
+
+        _this.onSelectionChange(range);
+      });
+    });
     quill.keyboard.addBinding({
       key: Keys.TAB
     }, this.selectHandler.bind(this));
     quill.keyboard.bindings[Keys.TAB].unshift(quill.keyboard.bindings[Keys.TAB].pop());
-    quill.keyboard.addBinding({
-      key: Keys.ENTER
-    }, this.selectHandler.bind(this));
+
+    var _iterator = _createForOfIteratorHelper(this.options.selectKeys),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var selectKey = _step.value;
+        quill.keyboard.addBinding({
+          key: selectKey
+        }, this.selectHandler.bind(this));
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
     quill.keyboard.bindings[Keys.ENTER].unshift(quill.keyboard.bindings[Keys.ENTER].pop());
     quill.keyboard.addBinding({
       key: Keys.ESCAPE
@@ -412,9 +605,11 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "hideMentionList",
     value: function hideMentionList() {
+      this.options.onBeforeClose();
       this.mentionContainer.style.display = "none";
       this.mentionContainer.remove();
       this.setIsOpen(false);
+      this.quill.root.removeAttribute('aria-activedescendant');
     }
   }, {
     key: "highlightItem",
@@ -430,6 +625,7 @@ var Mention = /*#__PURE__*/function () {
       }
 
       this.mentionList.childNodes[this.itemIndex].classList.add("selected");
+      this.quill.root.setAttribute('aria-activedescendant', this.mentionList.childNodes[this.itemIndex].id);
 
       if (scrollItemInView) {
         var itemHeight = this.mentionList.childNodes[this.itemIndex].offsetHeight;
@@ -467,7 +663,7 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "selectItem",
     value: function selectItem() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.itemIndex === -1) {
         return;
@@ -480,7 +676,7 @@ var Mention = /*#__PURE__*/function () {
       }
 
       this.options.onSelect(data, function (asyncData) {
-        _this.insertItem(asyncData);
+        _this2.insertItem(asyncData);
       });
       this.hideMentionList();
     }
@@ -602,10 +798,12 @@ var Mention = /*#__PURE__*/function () {
 
         for (var i = 0; i < data.length; i += 1) {
           var li = document.createElement("li");
+          li.id = 'quill-mention-item-' + i;
           li.className = this.options.listItemClass ? this.options.listItemClass : "";
 
           if (data[i].disabled) {
             li.className += " disabled";
+            li.setAttribute('aria-hidden', 'true');
           } else if (initialSelection === -1) {
             initialSelection = i;
           }
@@ -718,7 +916,7 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "setMentionContainerPosition_Normal",
     value: function setMentionContainerPosition_Normal() {
-      var _this2 = this;
+      var _this3 = this;
 
       var containerPos = this.quill.container.getBoundingClientRect();
       var mentionCharPos = this.quill.getBounds(this.mentionCharPos);
@@ -782,15 +980,15 @@ var Mention = /*#__PURE__*/function () {
 
       if (topPos >= 0) {
         this.options.mentionContainerClass.split(' ').forEach(function (className) {
-          _this2.mentionContainer.classList.add("".concat(className, "-bottom"));
+          _this3.mentionContainer.classList.add("".concat(className, "-bottom"));
 
-          _this2.mentionContainer.classList.remove("".concat(className, "-top"));
+          _this3.mentionContainer.classList.remove("".concat(className, "-top"));
         });
       } else {
         this.options.mentionContainerClass.split(' ').forEach(function (className) {
-          _this2.mentionContainer.classList.add("".concat(className, "-top"));
+          _this3.mentionContainer.classList.add("".concat(className, "-top"));
 
-          _this2.mentionContainer.classList.remove("".concat(className, "-bottom"));
+          _this3.mentionContainer.classList.remove("".concat(className, "-bottom"));
         });
       }
 
@@ -801,7 +999,7 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "setMentionContainerPosition_Fixed",
     value: function setMentionContainerPosition_Fixed() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.mentionContainer.style.position = "fixed";
       this.mentionContainer.style.height = null;
@@ -854,9 +1052,9 @@ var Mention = /*#__PURE__*/function () {
         }
 
         this.options.mentionContainerClass.split(" ").forEach(function (className) {
-          _this3.mentionContainer.classList.add("".concat(className, "-bottom"));
+          _this4.mentionContainer.classList.add("".concat(className, "-bottom"));
 
-          _this3.mentionContainer.classList.remove("".concat(className, "-top"));
+          _this4.mentionContainer.classList.remove("".concat(className, "-top"));
         });
       } else {
         topPos = relativeToPos.top - this.mentionContainer.offsetHeight;
@@ -869,9 +1067,9 @@ var Mention = /*#__PURE__*/function () {
         }
 
         this.options.mentionContainerClass.split(" ").forEach(function (className) {
-          _this3.mentionContainer.classList.add("".concat(className, "-top"));
+          _this4.mentionContainer.classList.add("".concat(className, "-top"));
 
-          _this3.mentionContainer.classList.remove("".concat(className, "-bottom"));
+          _this4.mentionContainer.classList.remove("".concat(className, "-bottom"));
         });
       }
 
@@ -889,7 +1087,7 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "onSomethingChange",
     value: function onSomethingChange() {
-      var _this4 = this;
+      var _this5 = this;
 
       var range = this.quill.getSelection();
       if (range == null) return;
@@ -920,14 +1118,22 @@ var Mention = /*#__PURE__*/function () {
               return;
             }
 
-            _this4.existingSourceExecutionToken = null;
+            _this5.existingSourceExecutionToken = null;
 
-            _this4.renderList(mentionChar, data, searchTerm);
+            _this5.renderList(mentionChar, data, searchTerm);
           }, mentionChar);
         } else {
+          if (this.existingSourceExecutionToken) {
+            this.existingSourceExecutionToken.abandoned = true;
+          }
+
           this.hideMentionList();
         }
       } else {
+        if (this.existingSourceExecutionToken) {
+          this.existingSourceExecutionToken.abandoned = true;
+        }
+
         this.hideMentionList();
       }
     }
@@ -971,4 +1177,4 @@ var Mention = /*#__PURE__*/function () {
 
 Quill.register("modules/mention", Mention);
 
-export default Mention;
+export { Mention as default };
