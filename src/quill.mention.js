@@ -738,10 +738,11 @@ class Mention {
   }
 
   onTextChange(delta, oldDelta, source) {
-    console.log("THIS IS DELTA", delta, "source", source);
-    if (source === "user") {
-      this.onSomethingChange();
-    }
+    throw new Error("NOT HERE BUDDY: " + delta + "  ___   " + source);
+    // console.log("THIS IS DELTA", delta, "source", source);
+    // if (source === "user") {
+    // this.onSomethingChange();
+    // }
   }
 
   onSelectionChange(range) {
