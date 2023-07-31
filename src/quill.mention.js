@@ -48,7 +48,14 @@ class Mention {
       positioningStrategy: "normal",
       defaultMenuOrientation: "bottom",
       blotName: "mention",
-      dataAttributes: ["id", "value", "denotationChar", "link", "target", "disabled"],
+      dataAttributes: [
+        "id",
+        "value",
+        "denotationChar",
+        "link",
+        "target",
+        "disabled"
+      ],
       linkTarget: "_blank",
       onOpen() {
         return true;
@@ -195,7 +202,10 @@ class Mention {
       this.mentionList.childNodes[i].classList.remove("selected");
     }
 
-    if (this.itemIndex === -1 || this.mentionList.childNodes[this.itemIndex].dataset.disabled === "true") {
+    if (
+      this.itemIndex === -1 ||
+      this.mentionList.childNodes[this.itemIndex].dataset.disabled === "true"
+    ) {
       return;
     }
 
@@ -247,7 +257,7 @@ class Mention {
     if (data.disabled) {
       return;
     }
-    this.options.onSelect(data, (asyncData) => {
+    this.options.onSelect(data, asyncData => {
       this.insertItem(asyncData);
     });
     this.hideMentionList();
@@ -274,7 +284,12 @@ class Mention {
     } else {
       insertAtPos = this.cursorPos;
     }
-    this.quill.insertEmbed(insertAtPos, this.options.blotName, render, Quill.sources.USER);
+    this.quill.insertEmbed(
+      insertAtPos,
+      this.options.blotName,
+      render,
+      Quill.sources.USER
+    );
     if (this.options.spaceAfterInsert) {
       this.quill.insertText(insertAtPos + 1, " ", Quill.sources.USER);
       // setSelection here sets cursor position
@@ -329,7 +344,10 @@ class Mention {
       return;
     }
 
-    if (this.mentionContainer.getElementsByClassName("ql-mention-loading").length > 0) {
+    if (
+      this.mentionContainer.getElementsByClassName("ql-mention-loading")
+        .length > 0
+    ) {
       this.showMentionList();
       return;
     }
@@ -343,7 +361,9 @@ class Mention {
   }
 
   removeLoading() {
-    var loadingDiv = this.mentionContainer.getElementsByClassName("ql-mention-loading");
+    var loadingDiv = this.mentionContainer.getElementsByClassName(
+      "ql-mention-loading"
+    );
     if (loadingDiv.length > 0) {
       loadingDiv[0].remove();
     }
@@ -397,7 +417,8 @@ class Mention {
     do {
       increment++;
       newIndex = (this.itemIndex + increment) % this.values.length;
-      var disabled = this.mentionList.childNodes[newIndex].dataset.disabled === "true";
+      var disabled =
+        this.mentionList.childNodes[newIndex].dataset.disabled === "true";
       if (increment === this.values.length + 1) {
         //we've wrapped around w/o finding an enabled item
         newIndex = -1;
@@ -416,8 +437,10 @@ class Mention {
 
     do {
       decrement++;
-      newIndex = (this.itemIndex + this.values.length - decrement) % this.values.length;
-      var disabled = this.mentionList.childNodes[newIndex].dataset.disabled === "true";
+      newIndex =
+        (this.itemIndex + this.values.length - decrement) % this.values.length;
+      var disabled =
+        this.mentionList.childNodes[newIndex].dataset.disabled === "true";
       if (decrement === this.values.length + 1) {
         //we've wrapped around w/o finding an enabled item
         newIndex = -1;
@@ -533,12 +556,12 @@ class Mention {
     }
 
     if (topPos >= 0) {
-      this.options.mentionContainerClass.split(' ').forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-bottom`);
         this.mentionContainer.classList.remove(`${className}-top`);
       });
     } else {
-      this.options.mentionContainerClass.split(' ').forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-top`);
         this.mentionContainer.classList.remove(`${className}-bottom`);
       });
@@ -559,11 +582,13 @@ class Mention {
       left: containerPos.left + mentionCharPos.left,
       top: containerPos.top + mentionCharPos.top,
       width: 0,
-      height: mentionCharPos.height,
+      height: mentionCharPos.height
     };
 
     //Which rectangle should it be relative to
-    const relativeToPos = this.options.fixMentionsToQuill ? containerPos : mentionCharPosAbsolute;
+    const relativeToPos = this.options.fixMentionsToQuill
+      ? containerPos
+      : mentionCharPosAbsolute;
 
     let topPos = this.options.offsetTop;
     let leftPos = this.options.offsetLeft;
@@ -576,15 +601,24 @@ class Mention {
       leftPos += relativeToPos.left;
 
       //if its off the righ edge, push it back
-      if (leftPos + this.mentionContainer.offsetWidth > document.documentElement.clientWidth) {
-        leftPos -= leftPos + this.mentionContainer.offsetWidth - document.documentElement.clientWidth;
+      if (
+        leftPos + this.mentionContainer.offsetWidth >
+        document.documentElement.clientWidth
+      ) {
+        leftPos -=
+          leftPos +
+          this.mentionContainer.offsetWidth -
+          document.documentElement.clientWidth;
       }
     }
 
     const availableSpaceTop = relativeToPos.top;
-    const availableSpaceBottom = document.documentElement.clientHeight - (relativeToPos.top + relativeToPos.height);
+    const availableSpaceBottom =
+      document.documentElement.clientHeight -
+      (relativeToPos.top + relativeToPos.height);
 
-    const fitsBottom = this.mentionContainer.offsetHeight <= availableSpaceBottom;
+    const fitsBottom =
+      this.mentionContainer.offsetHeight <= availableSpaceBottom;
     const fitsTop = this.mentionContainer.offsetHeight <= availableSpaceTop;
 
     var placement;
@@ -606,7 +640,7 @@ class Mention {
         this.mentionContainer.style.height = availableSpaceBottom - 3 + "px";
       }
 
-      this.options.mentionContainerClass.split(" ").forEach((className) => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-bottom`);
         this.mentionContainer.classList.remove(`${className}-top`);
       });
@@ -619,7 +653,7 @@ class Mention {
         topPos = 3;
       }
 
-      this.options.mentionContainerClass.split(" ").forEach((className) => {
+      this.options.mentionContainerClass.split(" ").forEach(className => {
         this.mentionContainer.classList.add(`${className}-top`);
         this.mentionContainer.classList.remove(`${className}-bottom`);
       });
@@ -652,13 +686,14 @@ class Mention {
     );
 
     if (
-        hasValidMentionCharIndex(
-          mentionCharIndex,
-          textBeforeCursor,
-          this.options.isolateCharacter
-        )
-      ) {
-      const mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
+      hasValidMentionCharIndex(
+        mentionCharIndex,
+        textBeforeCursor,
+        this.options.isolateCharacter
+      )
+    ) {
+      const mentionCharPos =
+        this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
       this.mentionCharPos = mentionCharPos;
       const textAfter = textBeforeCursor.substring(
         mentionCharIndex + mentionChar.length
@@ -672,7 +707,7 @@ class Mention {
         }
         this.renderLoading();
         var sourceRequestToken = {
-          abandoned: false,
+          abandoned: false
         };
         this.existingSourceExecutionToken = sourceRequestToken;
         this.options.source(
@@ -703,6 +738,7 @@ class Mention {
   }
 
   onTextChange(delta, oldDelta, source) {
+    console.log("THIS IS DELTA", delta, "source", source);
     if (source === "user") {
       this.onSomethingChange();
     }

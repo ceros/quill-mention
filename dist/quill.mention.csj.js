@@ -785,13 +785,13 @@ var Mention = /*#__PURE__*/function () {
       }
 
       if (topPos >= 0) {
-        this.options.mentionContainerClass.split(' ').forEach(function (className) {
+        this.options.mentionContainerClass.split(" ").forEach(function (className) {
           _this2.mentionContainer.classList.add("".concat(className, "-bottom"));
 
           _this2.mentionContainer.classList.remove("".concat(className, "-top"));
         });
       } else {
-        this.options.mentionContainerClass.split(' ').forEach(function (className) {
+        this.options.mentionContainerClass.split(" ").forEach(function (className) {
           _this2.mentionContainer.classList.add("".concat(className, "-top"));
 
           _this2.mentionContainer.classList.remove("".concat(className, "-bottom"));
@@ -947,6 +947,8 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "onTextChange",
     value: function onTextChange(delta, oldDelta, source) {
+      console.log("THIS IS DELTA", delta, "source", source);
+
       if (source === "user") {
         this.onSomethingChange();
       }
