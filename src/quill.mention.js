@@ -694,6 +694,7 @@ class Mention {
         this.options.isolateCharacter
       )
     ) {
+      console.log("__HAS VALID MENTION CHAR INDEX__");
       const mentionCharPos =
         this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
       this.mentionCharPos = mentionCharPos;
@@ -704,6 +705,7 @@ class Mention {
         textAfter.length >= this.options.minChars &&
         hasValidChars(textAfter, this.getAllowedCharsRegex(mentionChar))
       ) {
+        console.log("__________ HAS VALID CHARS ___________");
         if (this.existingSourceExecutionToken) {
           this.existingSourceExecutionToken.abandoned = true;
         }
@@ -715,6 +717,7 @@ class Mention {
         this.options.source(
           textAfter,
           (data, searchTerm) => {
+            console.log("________________SOURCE CALLBACK_________________");
             if (sourceRequestToken.abandoned) {
               return;
             }

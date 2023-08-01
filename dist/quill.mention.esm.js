@@ -903,11 +903,14 @@ var Mention = /*#__PURE__*/function () {
       console.error("ON SOMETHIGN CHANGE", range);
 
       if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
+        console.log("__HAS VALID MENTION CHAR INDEX__");
         var mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
         this.mentionCharPos = mentionCharPos;
         var textAfter = textBeforeCursor.substring(mentionCharIndex + mentionChar.length);
 
         if (textAfter.length >= this.options.minChars && hasValidChars(textAfter, this.getAllowedCharsRegex(mentionChar))) {
+          console.log("__________ HAS VALID CHARS ___________");
+
           if (this.existingSourceExecutionToken) {
             this.existingSourceExecutionToken.abandoned = true;
           }
@@ -918,6 +921,8 @@ var Mention = /*#__PURE__*/function () {
           };
           this.existingSourceExecutionToken = sourceRequestToken;
           this.options.source(textAfter, function (data, searchTerm) {
+            console.log("________________SOURCE CALLBACK_________________");
+
             if (sourceRequestToken.abandoned) {
               return;
             }
