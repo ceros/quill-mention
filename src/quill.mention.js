@@ -761,6 +761,7 @@ class Mention {
   }
 }
 
-Quill.register("modules/mention", Mention);
-
 export default Mention;
+throw new Error(
+  "NOT HERE BUDDY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+);
