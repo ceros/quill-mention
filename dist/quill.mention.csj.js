@@ -904,6 +904,8 @@ var Mention = /*#__PURE__*/function () {
           mentionChar = _getMentionCharIndex.mentionChar,
           mentionCharIndex = _getMentionCharIndex.mentionCharIndex;
 
+      console.error("ON SOMETHIGN CHANGE", range);
+
       if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
         var mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
         this.mentionCharPos = mentionCharPos;
@@ -947,7 +949,7 @@ var Mention = /*#__PURE__*/function () {
   }, {
     key: "onTextChange",
     value: function onTextChange(delta, oldDelta, source) {
-      console.log("THIS IS DELTA", delta, "source", source);
+      console.log("NOT HERE BUDDY: " + delta + "  ___   " + source);
 
       if (source === "user") {
         this.onSomethingChange();

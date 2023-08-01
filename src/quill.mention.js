@@ -685,6 +685,8 @@ class Mention {
       this.options.mentionCharIndexParser
     );
 
+    console.error("ON SOMETHIGN CHANGE", range);
+
     if (
       hasValidMentionCharIndex(
         mentionCharIndex,
@@ -738,11 +740,11 @@ class Mention {
   }
 
   onTextChange(delta, oldDelta, source) {
-    throw new Error("NOT HERE BUDDY: " + delta + "  ___   " + source);
-    // console.log("THIS IS DELTA", delta, "source", source);
-    // if (source === "user") {
-    // this.onSomethingChange();
-    // }
+    console.log("NOT HERE BUDDY: " + delta + "  ___   " + source);
+
+    if (source === "user") {
+      this.onSomethingChange();
+    }
   }
 
   onSelectionChange(range) {
@@ -761,7 +763,6 @@ class Mention {
   }
 }
 
+Quill.register("modules/mention", Mention);
+
 export default Mention;
-throw new Error(
-  "NOT HERE BUDDY: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-);
