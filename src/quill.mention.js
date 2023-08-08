@@ -685,7 +685,12 @@ class Mention {
       this.options.mentionCharIndexParser
     );
 
-    console.error("ON SOMETHIGN CHANGE", range);
+    console.error(
+      "ON SOMETHIGN CHANGE",
+      range,
+      textBeforeCursor,
+      this.cursorPos
+    );
 
     if (
       hasValidMentionCharIndex(
@@ -694,13 +699,13 @@ class Mention {
         this.options.isolateCharacter
       )
     ) {
-      console.log("__HAS VALID MENTION CHAR INDEX__");
       const mentionCharPos =
         this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
       this.mentionCharPos = mentionCharPos;
       const textAfter = textBeforeCursor.substring(
         mentionCharIndex + mentionChar.length
       );
+      console.log("__HAS VALID MENTION CHAR INDEX__", textAfter);
       if (
         textAfter.length >= this.options.minChars &&
         hasValidChars(textAfter, this.getAllowedCharsRegex(mentionChar))
