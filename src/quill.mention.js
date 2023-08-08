@@ -4,7 +4,7 @@ import {
   attachDataValues,
   getMentionCharIndex,
   hasValidChars,
-  hasValidMentionCharIndex
+  hasValidMentionCharIndex,
 } from "./utils";
 import "./quill.mention.css";
 import "./blots/mention";
@@ -54,7 +54,7 @@ class Mention {
         "denotationChar",
         "link",
         "target",
-        "disabled"
+        "disabled",
       ],
       linkTarget: "_blank",
       onOpen() {
@@ -70,13 +70,13 @@ class Mention {
       spaceAfterInsert: true,
       mentionCharIndexParser: function(text, mentionChar) {
         return text.lastIndexOf(mentionChar);
-      }
+      },
     };
 
     Object.assign(this.options, options, {
       dataAttributes: Array.isArray(options.dataAttributes)
         ? this.options.dataAttributes.concat(options.dataAttributes)
-        : this.options.dataAttributes
+        : this.options.dataAttributes,
     });
 
     //create mention container
@@ -102,7 +102,7 @@ class Mention {
 
     quill.keyboard.addBinding(
       {
-        key: Keys.TAB
+        key: Keys.TAB,
       },
       this.selectHandler.bind(this)
     );
@@ -112,7 +112,7 @@ class Mention {
 
     quill.keyboard.addBinding(
       {
-        key: Keys.ENTER
+        key: Keys.ENTER,
       },
       this.selectHandler.bind(this)
     );
@@ -122,21 +122,21 @@ class Mention {
 
     quill.keyboard.addBinding(
       {
-        key: Keys.ESCAPE
+        key: Keys.ESCAPE,
       },
       this.escapeHandler.bind(this)
     );
 
     quill.keyboard.addBinding(
       {
-        key: Keys.UP
+        key: Keys.UP,
       },
       this.upHandler.bind(this)
     );
 
     quill.keyboard.addBinding(
       {
-        key: Keys.DOWN
+        key: Keys.DOWN,
       },
       this.downHandler.bind(this)
     );
@@ -257,7 +257,7 @@ class Mention {
     if (data.disabled) {
       return;
     }
-    this.options.onSelect(data, asyncData => {
+    this.options.onSelect(data, (asyncData) => {
       this.insertItem(asyncData);
     });
     this.hideMentionList();
@@ -556,12 +556,12 @@ class Mention {
     }
 
     if (topPos >= 0) {
-      this.options.mentionContainerClass.split(" ").forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach((className) => {
         this.mentionContainer.classList.add(`${className}-bottom`);
         this.mentionContainer.classList.remove(`${className}-top`);
       });
     } else {
-      this.options.mentionContainerClass.split(" ").forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach((className) => {
         this.mentionContainer.classList.add(`${className}-top`);
         this.mentionContainer.classList.remove(`${className}-bottom`);
       });
@@ -582,7 +582,7 @@ class Mention {
       left: containerPos.left + mentionCharPos.left,
       top: containerPos.top + mentionCharPos.top,
       width: 0,
-      height: mentionCharPos.height
+      height: mentionCharPos.height,
     };
 
     //Which rectangle should it be relative to
@@ -640,7 +640,7 @@ class Mention {
         this.mentionContainer.style.height = availableSpaceBottom - 3 + "px";
       }
 
-      this.options.mentionContainerClass.split(" ").forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach((className) => {
         this.mentionContainer.classList.add(`${className}-bottom`);
         this.mentionContainer.classList.remove(`${className}-top`);
       });
@@ -653,7 +653,7 @@ class Mention {
         topPos = 3;
       }
 
-      this.options.mentionContainerClass.split(" ").forEach(className => {
+      this.options.mentionContainerClass.split(" ").forEach((className) => {
         this.mentionContainer.classList.add(`${className}-top`);
         this.mentionContainer.classList.remove(`${className}-bottom`);
       });
@@ -689,7 +689,8 @@ class Mention {
       "ON SOMETHIGN CHANGE",
       range,
       textBeforeCursor,
-      this.cursorPos
+      this.cursorPos,
+      "YEAH"
     );
 
     if (
@@ -716,7 +717,7 @@ class Mention {
         }
         this.renderLoading();
         var sourceRequestToken = {
-          abandoned: false
+          abandoned: false,
         };
         this.existingSourceExecutionToken = sourceRequestToken;
         this.options.source(

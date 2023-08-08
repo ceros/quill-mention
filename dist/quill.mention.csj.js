@@ -904,7 +904,7 @@ var Mention = /*#__PURE__*/function () {
           mentionChar = _getMentionCharIndex.mentionChar,
           mentionCharIndex = _getMentionCharIndex.mentionCharIndex;
 
-      console.error("ON SOMETHIGN CHANGE", range, textBeforeCursor, this.cursorPos);
+      console.error("ON SOMETHIGN CHANGE", range, textBeforeCursor, this.cursorPos, "YEAH");
 
       if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
         var mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
