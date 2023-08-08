@@ -900,13 +900,13 @@ var Mention = /*#__PURE__*/function () {
           mentionChar = _getMentionCharIndex.mentionChar,
           mentionCharIndex = _getMentionCharIndex.mentionCharIndex;
 
-      console.error("ON SOMETHIGN CHANGE", range);
+      console.error("ON SOMETHIGN CHANGE", range, textBeforeCursor, this.cursorPos);
 
       if (hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter)) {
-        console.log("__HAS VALID MENTION CHAR INDEX__");
         var mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
         this.mentionCharPos = mentionCharPos;
         var textAfter = textBeforeCursor.substring(mentionCharIndex + mentionChar.length);
+        console.log("__HAS VALID MENTION CHAR INDEX__", textAfter);
 
         if (textAfter.length >= this.options.minChars && hasValidChars(textAfter, this.getAllowedCharsRegex(mentionChar))) {
           console.log("__________ HAS VALID CHARS ___________");
