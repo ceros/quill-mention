@@ -38,8 +38,6 @@ yarn add quill-mention
 
 ```javascript
 import "quill-mention/autoregister";
-// or
-require("quill-mention/autoregister");
 ```
 
 Importing quill-mention automatically adds it to Quill modules.
@@ -58,7 +56,7 @@ Quill.register({ "blots/mention": MentionBlot, "modules/mention": Mention });
 ### Example
 
 ```javascript
-import "quill-mention";
+import "quill-mention/autoregister";
 
 const atValues = [
   { id: 1, value: "Fredrik Sundqvist" },
