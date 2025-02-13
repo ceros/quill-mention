@@ -123,7 +123,7 @@
         else
             element.innerText = value;
     }
-    function getMentionCharIndex(text, mentionDenotationChars, isolateChar, allowInlineMentionChar) {
+    function getMentionCharIndex(text, mentionDenotationChars, isolateChar, allowInlineMentionChar, mentionCharIndexParser) {
         return mentionDenotationChars.reduce((prev, mentionChar) => {
             let mentionCharIndex;
             if (isolateChar && allowInlineMentionChar) {
@@ -143,7 +143,7 @@
                         : 0;
             }
             else {
-                mentionCharIndex = text.lastIndexOf(mentionChar);
+                mentionCharIndex = mentionCharIndexParser(text, mentionChar);
             }
             if (mentionCharIndex > prev.mentionCharIndex) {
                 return {
@@ -722,7 +722,7 @@
             const textPrefix = textOffset
                 ? this.quill.getText(textOffset - 1, textOffset)
                 : "";
-            const { mentionChar, mentionCharIndex } = getMentionCharIndex(textBeforeCursor, this.options.mentionDenotationChars, this.options.isolateCharacter, this.options.allowInlineMentionChar);
+            const { mentionChar, mentionCharIndex } = getMentionCharIndex(textBeforeCursor, this.options.mentionDenotationChars, this.options.isolateCharacter, this.options.allowInlineMentionChar, this.options.mentionCharIndexParser);
             if (mentionChar !== null &&
                 hasValidMentionCharIndex(mentionCharIndex, textBeforeCursor, this.options.isolateCharacter, textPrefix)) {
                 const mentionCharPos = this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
@@ -815,6 +815,9 @@
         mentionContainerClass: "ql-mention-list-container",
         mentionListClass: "ql-mention-list",
         spaceAfterInsert: true,
+        mentionCharIndexParser: (text, mentionChar) => {
+            return text.lastIndexOf(mentionChar);
+        },
         selectKeys: [Keys.ENTER],
         source: (searchTerm, renderList, mentionChar) => {
             renderList([], searchTerm);
