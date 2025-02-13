@@ -31,7 +31,8 @@ function getMentionCharIndex(
   text: string,
   mentionDenotationChars: string[],
   isolateChar: boolean,
-  allowInlineMentionChar: boolean
+  allowInlineMentionChar: boolean,
+  mentionCharIndexParser: (text: string, mentionChar: string) => number
 ): { mentionChar: string | null; mentionCharIndex: number } {
   return mentionDenotationChars.reduce(
     (prev, mentionChar) => {
@@ -55,7 +56,7 @@ function getMentionCharIndex(
               mentionChar.length
             : 0;
       } else {
-        mentionCharIndex = text.lastIndexOf(mentionChar);
+        mentionCharIndex =  mentionCharIndexParser(text, mentionChar);
       }
 
       if (mentionCharIndex > prev.mentionCharIndex) {
