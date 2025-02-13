@@ -6,4 +6,4 @@ const Keys = {
   DOWN: "ArrowDown",
 };
 
-export {Keys};
+export { Keys };

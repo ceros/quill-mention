@@ -1,5 +1,5 @@
 import Quill from "quill";
-import {Keys} from "./constants";
+import { Keys } from "./constants";
 import {
   attachDataValues,
   getMentionCharIndex,
@@ -154,9 +154,9 @@ export interface MentionOption {
         value: string;
         [key: string]: string | undefined;
       }[],
-      searchTerm: string
+      searchTerm: string,
     ) => void,
-    mentionChar: string
+    mentionChar: string,
   ) => void;
 
   /**
@@ -184,7 +184,7 @@ export interface MentionOption {
    */
   renderItem: (
     item: { id: string; value: string; [key: string]: unknown },
-    searchTerm: string
+    searchTerm: string,
   ) => string | HTMLElement;
 
   /**
@@ -203,8 +203,8 @@ export interface MentionOption {
     insertItem: (
       data: Record<string, unknown>,
       programmaticInsert?: boolean,
-      overriddenOptions?: object
-    ) => void
+      overriddenOptions?: object,
+    ) => void,
   ) => void;
 }
 
@@ -247,7 +247,7 @@ export class Mention extends Module<MentionOption> {
           value: string;
           [key: string]: string | undefined;
         }[],
-        searchTerm
+        searchTerm,
       );
     },
     renderItem: ({ value }) => `${value}`,
@@ -333,10 +333,10 @@ export class Mention extends Module<MentionOption> {
       {
         key: Keys.TAB,
       },
-      this.selectHandler.bind(this)
+      this.selectHandler.bind(this),
     );
     quill.keyboard.bindings[Keys.TAB].unshift(
-      quill.keyboard.bindings[Keys.TAB].pop()!
+      quill.keyboard.bindings[Keys.TAB].pop()!,
     );
 
     for (let selectKey of this.options.selectKeys ?? []) {
@@ -344,32 +344,32 @@ export class Mention extends Module<MentionOption> {
         {
           key: selectKey,
         },
-        this.selectHandler.bind(this)
+        this.selectHandler.bind(this),
       );
     }
     quill.keyboard.bindings[Keys.ENTER].unshift(
-      quill.keyboard.bindings[Keys.ENTER].pop()!
+      quill.keyboard.bindings[Keys.ENTER].pop()!,
     );
 
     quill.keyboard.addBinding(
       {
         key: Keys.ESCAPE,
       },
-      this.escapeHandler.bind(this)
+      this.escapeHandler.bind(this),
     );
 
     quill.keyboard.addBinding(
       {
         key: Keys.UP,
       },
-      this.upHandler.bind(this)
+      this.upHandler.bind(this),
     );
 
     quill.keyboard.addBinding(
       {
         key: Keys.DOWN,
       },
-      this.downHandler.bind(this)
+      this.downHandler.bind(this),
     );
   }
 
@@ -453,12 +453,11 @@ export class Mention extends Module<MentionOption> {
     elementAtItemIndex.classList.add("selected");
     this.quill.root.setAttribute(
       "aria-activedescendant",
-      elementAtItemIndex.id
+      elementAtItemIndex.id,
     );
 
     if (scrollItemInView) {
-      const itemHeight =
-        elementAtItemIndex.offsetHeight;
+      const itemHeight = elementAtItemIndex.offsetHeight;
       const itemPos = elementAtItemIndex.offsetTop;
       const containerTop = this.mentionContainer.scrollTop;
       const containerBottom = containerTop + this.mentionContainer.offsetHeight;
@@ -495,17 +494,17 @@ export class Mention extends Module<MentionOption> {
         return this.insertItem(
           asyncData,
           programmaticInsert,
-          overriddenOptions
+          overriddenOptions,
         );
-      }
+      },
     );
     this.hideMentionList();
   }
 
   insertItem(
-    data: {[key: string]: unknown} | null,
+    data: { [key: string]: unknown } | null,
     programmaticInsert: boolean,
-    overriddenOptions = {}
+    overriddenOptions = {},
   ) {
     const render = data;
     if (
@@ -528,7 +527,7 @@ export class Mention extends Module<MentionOption> {
       this.quill.deleteText(
         this.mentionCharPos,
         this.cursorPos - this.mentionCharPos,
-        Quill.sources.USER
+        Quill.sources.USER,
       );
     } else {
       insertAtPos = this.cursorPos;
@@ -537,7 +536,7 @@ export class Mention extends Module<MentionOption> {
       insertAtPos,
       options.blotName ?? Mention.DEFAULTS.blotName,
       render,
-      Quill.sources.USER
+      Quill.sources.USER,
     );
     if (options.spaceAfterInsert) {
       this.quill.insertText(insertAtPos + 1, " ", Quill.sources.USER);
@@ -623,7 +622,7 @@ export class Mention extends Module<MentionOption> {
   renderList(
     mentionChar: string,
     data: { id: string; value: string; [key: string]: string | undefined }[],
-    searchTerm: string
+    searchTerm: string,
   ) {
     if (data && data.length > 0) {
       this.removeLoading();
@@ -657,7 +656,7 @@ export class Mention extends Module<MentionOption> {
         }
         li.dataset.denotationChar = mentionChar;
         this.mentionList.appendChild(
-          attachDataValues(li, data[i], this.options.dataAttributes!)
+          attachDataValues(li, data[i], this.options.dataAttributes!),
         );
       }
       this.itemIndex = initialSelection;
@@ -938,11 +937,11 @@ export class Mention extends Module<MentionOption> {
   getTextBeforeCursor() {
     const startPos = Math.max(
       0,
-      (this.cursorPos ?? 0) - this.options.maxChars!
+      (this.cursorPos ?? 0) - this.options.maxChars!,
     );
     const textBeforeCursorPos = this.quill.getText(
       startPos,
-      (this.cursorPos ?? 0) - startPos
+      (this.cursorPos ?? 0) - startPos,
     );
     return textBeforeCursorPos;
   }
@@ -964,7 +963,7 @@ export class Mention extends Module<MentionOption> {
       this.options.mentionDenotationChars!,
       this.options.isolateCharacter!,
       this.options.allowInlineMentionChar!,
-      this.options.mentionCharIndexParser!
+      this.options.mentionCharIndexParser!,
     );
 
     if (
@@ -973,14 +972,14 @@ export class Mention extends Module<MentionOption> {
         mentionCharIndex,
         textBeforeCursor,
         this.options.isolateCharacter!,
-        textPrefix
+        textPrefix,
       )
     ) {
       const mentionCharPos =
         this.cursorPos - (textBeforeCursor.length - mentionCharIndex);
       this.mentionCharPos = mentionCharPos;
       const textAfter = textBeforeCursor.substring(
-        mentionCharIndex + mentionChar.length
+        mentionCharIndex + mentionChar.length,
       );
       if (
         textAfter.length >= this.options.minChars! &&
@@ -1003,7 +1002,7 @@ export class Mention extends Module<MentionOption> {
             this.existingSourceExecutionToken = undefined;
             this.renderList(mentionChar, data, searchTerm);
           },
-          mentionChar
+          mentionChar,
         );
       } else {
         if (this.existingSourceExecutionToken) {
