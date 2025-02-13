@@ -1,2 +1,2 @@
-import './quill.mention.css';
-import './autoregister';
+import "./quill.mention.css";
+import "./autoregister";

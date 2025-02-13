@@ -5,7 +5,7 @@ function attachDataValues(
     id: string;
     value: string;
   },
-  dataAttributes: string[]
+  dataAttributes: string[],
 ) {
   const mention = element;
   Object.keys(data).forEach((key) => {
@@ -20,7 +20,7 @@ function attachDataValues(
 
 function setInnerContent(
   element: HTMLElement,
-  value: HTMLElement | string | null
+  value: HTMLElement | string | null,
 ) {
   if (value === null) return;
   if (typeof value === "object") element.appendChild(value);
@@ -32,7 +32,7 @@ function getMentionCharIndex(
   mentionDenotationChars: string[],
   isolateChar: boolean,
   allowInlineMentionChar: boolean,
-  mentionCharIndexParser: (text: string, mentionChar: string) => number
+  mentionCharIndexParser: (text: string, mentionChar: string) => number,
 ): { mentionChar: string | null; mentionCharIndex: number } {
   return mentionDenotationChars.reduce(
     (prev, mentionChar) => {
@@ -56,7 +56,7 @@ function getMentionCharIndex(
               mentionChar.length
             : 0;
       } else {
-        mentionCharIndex =  mentionCharIndexParser(text, mentionChar);
+        mentionCharIndex = mentionCharIndexParser(text, mentionChar);
       }
 
       if (mentionCharIndex > prev.mentionCharIndex) {
@@ -70,7 +70,7 @@ function getMentionCharIndex(
         mentionCharIndex: prev.mentionCharIndex,
       };
     },
-    { mentionChar: null as string | null, mentionCharIndex: -1 }
+    { mentionChar: null as string | null, mentionCharIndex: -1 },
   );
 }
 
@@ -82,7 +82,7 @@ function hasValidMentionCharIndex(
   mentionCharIndex: number,
   text: string,
   isolateChar: boolean,
-  textPrefix: string
+  textPrefix: string,
 ) {
   if (mentionCharIndex === -1) {
     return false;
