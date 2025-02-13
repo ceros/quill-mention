@@ -126,6 +126,14 @@ export interface MentionOption {
   spaceAfterInsert: boolean;
 
   /**
+   * A function that returns the index of the mention character in the text. The default implementation is to return the last index of the mention character.
+   * @param text
+   * @param mentionChar
+   * @returns
+   */
+  mentionCharIndexParser: (text: string, mentionChar: string) => number;
+
+  /**
    * An array of keyboard key codes that will trigger the select action for the mention dropdown. Default is ENTER key. See this reference for a list of numbers for each keyboard key.
    * @default [13]
    */
@@ -228,6 +236,9 @@ export class Mention extends Module<MentionOption> {
     mentionContainerClass: "ql-mention-list-container",
     mentionListClass: "ql-mention-list",
     spaceAfterInsert: true,
+    mentionCharIndexParser: (text: string, mentionChar: string) => {
+      return text.lastIndexOf(mentionChar);
+    },
     selectKeys: [Keys.ENTER],
     source: (searchTerm, renderList, mentionChar) => {
       renderList(
@@ -952,7 +963,8 @@ export class Mention extends Module<MentionOption> {
       textBeforeCursor,
       this.options.mentionDenotationChars!,
       this.options.isolateCharacter!,
-      this.options.allowInlineMentionChar!
+      this.options.allowInlineMentionChar!,
+      this.options.mentionCharIndexParser!
     );
 
     if (
