@@ -4,6 +4,7 @@
 
 This package is a fork of the [quill-mention](https://www.npmjs.com/package/quill-mention) npm package. The original source 
 code is available on GitHub at [afry/quill-mention](https://github.com/afry/quill-mention).
+Version of this package is equal to version of original package, to make it clear which version of original package is used.
 
 # Quill Mention
 
